@@ -1,0 +1,63 @@
+package com.project.pokesearch.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.project.pokesearch.model.Team;
+import com.project.pokesearch.model.User;
+import com.project.pokesearch.repository.TeamPokemonRepository;
+import com.project.pokesearch.repository.TeamRepository;
+
+import jakarta.transaction.Transactional;
+
+
+@Service
+public class TeamService {
+    private final TeamRepository teamRepository;
+    private final TeamPokemonRepository teamPokemonRepository;
+
+    @Autowired
+    public TeamService(TeamRepository teamRepository, TeamPokemonRepository teamPokemonRepository)
+    {
+        this.teamRepository = teamRepository;
+        this.teamPokemonRepository = teamPokemonRepository;
+    }
+
+    public List<Team> getUserTeams(User user)
+    {
+        return teamRepository.findByUserOrderByCreatedAtDesc(user);
+    }
+
+    public Optional<Team> getTeamById(Long id)
+    {
+        return teamRepository.findById(id);
+    }
+
+    public boolean existsByNameAndUser(String name, User user){
+        return teamRepository.existsByNameAndUser(name, user);
+    }
+
+
+    @Transactional
+    public Team createTeam(Team team)
+    {
+        return teamRepository.save(team);
+    }
+
+    @Transactional
+    public Team updateTeam(Team team)
+    {
+        return teamRepository.save(team);
+    }
+
+    @Transactional
+    public void deleteTeam(Team team)
+    {
+        teamRepository.delete(team);
+    }
+
+    
+}

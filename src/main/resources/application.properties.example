@@ -1,0 +1,24 @@
+#SPRING NAME
+spring.application.name=PokeSearch
+
+#SPRING JPA
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+spring.datasource.url=jdbc:mysql://localhost:3306/pokesearch
+spring.datasource.username=your_username
+spring.datasource.password=your_password
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+#SPRING JWT
+app.jwt.secret=your_jwt_secret_key
+app.jwt.expirationMs=8640000
+
+#SPRING MAIL
+spring.mail.host=sandbox.smtp.mailtrap.io
+spring.mail.port=587
+spring.mail.username=your_mailtrap_username
+spring.mail.password=your_mailtrap_password
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
