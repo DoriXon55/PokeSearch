@@ -1,8 +1,10 @@
 package com.project.pokesearch.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.project.pokesearch.dto.PokemonGraphQlResponseRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.client.HttpGraphQlClient;
 import org.springframework.stereotype.Service;
@@ -62,12 +64,21 @@ public class PokemonService {
     
     
     // ------------- GRAPHQL PART DEV --------------------
-    public Mono<Object> getPokemonListGraphQl(int limit, int offset){
+    @Cacheable(value = "pokemonListGraphQl", key = "'list-gql-' + #limit + '-' + #offset")
+    public Mono<List<PokemonGraphQlResponseRecord>> getPokemonListGraphQl(int limit, int offset){
         return graphQlClient.documentName("pokemonList")
                 .variable("limit", limit)
                 .variable("offset", offset)
                 .execute()
-                .map(response -> response.field("pokemon_v2_pokemon").toEntityList(Object.class));
+                .map(response -> response.field("pokemon_v2_pokemon").toEntityList(PokemonGraphQlResponseRecord.class));
+    }
+    
+    @Cacheable(value = "pokemonSearchGraphQl", key = "'search-gql' + #nameOrId.toLowerCase()")
+    public Mono<List<PokemonGraphQlResponseRecord>> searchPokemonGraphQl(String nameOrId){
+        return graphQlClient.documentName("searchPokemonByNameOrId")
+                .variable("nameOrId", nameOrId)
+                .execute()
+                .map(response -> response.field("pokemon_v2_pokemon").toEntityList(PokemonGraphQlResponseRecord.class));
     }
     
 

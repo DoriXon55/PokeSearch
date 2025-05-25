@@ -9,5 +9,8 @@ query searchPokemonByNameOrId($nameOrId: String)
                 name
             }
         }
+        pokemon_v2_pokemonsprites {
+            sprites 
+        }
     }
 }
