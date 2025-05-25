@@ -4,20 +4,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.client.HttpGraphQlClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import org.springframework.cache.annotation.Cacheable;
+import reactor.core.publisher.Mono;
 
 @Service
 public class PokemonService {
+    
+    
     private static final String POKE_API_URL = "https://pokeapi.co/api/v2/";
+    
     private final RestTemplate restTemplate;
+    private final HttpGraphQlClient graphQlClient;
 
     @Autowired
-    public PokemonService(RestTemplate restTemplate)
+    public PokemonService(HttpGraphQlClient graphQlClient, RestTemplate restTemplate)
     {
+        this.graphQlClient = graphQlClient;
         this.restTemplate = restTemplate;
     }
 
@@ -52,6 +59,17 @@ public class PokemonService {
         return restTemplate.getForObject(url, Map.class);
 
     }
+    
+    
+    // ------------- GRAPHQL PART DEV --------------------
+    public Mono<Object> getPokemonListGraphQl(int limit, int offset){
+        return graphQlClient.documentName("pokemonList")
+                .variable("limit", limit)
+                .variable("offset", offset)
+                .execute()
+                .map(response -> response.field("pokemon_v2_pokemon").toEntityList(Object.class));
+    }
+    
 
     
 }

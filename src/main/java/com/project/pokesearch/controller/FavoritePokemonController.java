@@ -62,13 +62,13 @@ public class FavoritePokemonController {
     public ResponseEntity<?> addFavoritePokemon(@RequestBody FavoritePokemonDTO favoriteDTO, Principal principal) {
         User user = getUserFromPrincipal(principal);
         
-        if (favoritePokemonService.existsByUserAndPokemonId(user, favoriteDTO.getPokemonId())) {
+        if (favoritePokemonService.existsByUserAndPokemonId(user, favoriteDTO.pokemonId())) {
             return ResponseEntity.badRequest().body("Pokemon already in favorites");
         }
         
         FavoritePokemon favoritePokemon = new FavoritePokemon();
         favoritePokemon.setUser(user);
-        favoritePokemon.setPokemonId(favoriteDTO.getPokemonId());
+        favoritePokemon.setPokemonId(favoriteDTO.pokemonId());
         favoritePokemon.setAddedAt(LocalDateTime.now());
         
         FavoritePokemon saved = favoritePokemonService.addFavoritePokemon(favoritePokemon);

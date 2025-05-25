@@ -23,7 +23,7 @@ public class PasswordResetController {
     @PostMapping("/reset-request")
     public ResponseEntity<?> requestReset(@RequestBody PasswordResetRequestDTO requestDTO)
     {
-        boolean result = passwordResetService.requestPasswordReset(requestDTO.getEmail());
+        boolean result = passwordResetService.requestPasswordReset(requestDTO.email());
         if (result) {
             return ResponseEntity.ok(Map.of("message", "Password reset email sent"));
         } else {
@@ -35,7 +35,7 @@ public class PasswordResetController {
     @PostMapping("/verify-code")
     public ResponseEntity<?> verifyCode(@RequestBody VerifyCodeDTO verifyDTO)
     {
-        boolean isValid = passwordResetService.validateVerificationCode(verifyDTO.getToken(), verifyDTO.getCode());
+        boolean isValid = passwordResetService.validateVerificationCode(verifyDTO.token(), verifyDTO.code());
         if (isValid) {
             return ResponseEntity.ok(Map.of("valid", true));
         } else {
@@ -47,7 +47,7 @@ public class PasswordResetController {
     @PostMapping("/reset")
     public ResponseEntity<?> resetPassword(@RequestBody PasswordResetDTO resetDTO)
     {
-        boolean result = passwordResetService.resetPassword(resetDTO.getToken(), resetDTO.getCode(), resetDTO.getNewPassword());
+        boolean result = passwordResetService.resetPassword(resetDTO.token(), resetDTO.code(), resetDTO.newPassword());
         if (result) {
             return ResponseEntity.ok(Map.of("message", "Password reset successfully"));
         } else {

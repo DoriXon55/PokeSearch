@@ -81,14 +81,14 @@ public class TeamPokemonController {
 
         Team team = teamOpt.get();
 
-        if (pokemonDTO.getPosition() < 1 || pokemonDTO.getPosition() > 6) {
+        if (pokemonDTO.position() < 1 || pokemonDTO.position() > 6) {
             return ResponseEntity.badRequest().body("Position must be between 1 and 6");
         }
 
         TeamPokemon teamPokemon = new TeamPokemon();
         teamPokemon.setTeam(team);
-        teamPokemon.setPokemonId(pokemonDTO.getPokemonId());
-        teamPokemon.setPosition(pokemonDTO.getPosition());
+        teamPokemon.setPokemonId(pokemonDTO.pokemonId());
+        teamPokemon.setPosition(pokemonDTO.pokemonId());
 
         TeamPokemon savedPokemon = teamPokemonService.addPokemonToTeam(teamPokemon);
         return ResponseEntity.ok(userMapper.toTeamPokemonDTO(savedPokemon));

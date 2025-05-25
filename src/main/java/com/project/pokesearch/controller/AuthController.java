@@ -43,7 +43,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequestDTO loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+            new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -55,17 +55,17 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequestDTO registerRequest) {
-        if (userRepository.existsByUsername(registerRequest.getUsername())) {
+        if (userRepository.existsByUsername(registerRequest.username())) {
             return ResponseEntity.badRequest().body("Username is already taken!");
         }
-        if (userRepository.existsByEmail(registerRequest.getEmail())) {
+        if (userRepository.existsByEmail(registerRequest.email())) {
             return ResponseEntity.badRequest().body("Email is already in use!");
         }
 
         User user = new User();
-        user.setUsername(registerRequest.getUsername());
-        user.setEmail(registerRequest.getEmail());
-        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setUsername(registerRequest.username());
+        user.setEmail(registerRequest.email());
+        user.setPassword(passwordEncoder.encode(registerRequest.password()));
         user.setCreatedAt(LocalDateTime.now());
         userRepository.save(user);
         return ResponseEntity.ok("User registered successfully");

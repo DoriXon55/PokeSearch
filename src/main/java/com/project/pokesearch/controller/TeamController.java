@@ -70,11 +70,11 @@ public class TeamController {
     @PostMapping
     public ResponseEntity<?> createTeam(@RequestBody TeamDTO teamDTO, Principal principal) {
         User user = getUserFromPrincipal(principal);
-        if (teamService.existsByNameAndUser(teamDTO.getName(), user)) {
+        if (teamService.existsByNameAndUser(teamDTO.name(), user)) {
             return ResponseEntity.badRequest().body("You already have a team with this name");
         }
         Team team = new Team();
-        team.setName(teamDTO.getName());
+        team.setName(teamDTO.name());
         team.setUser(user);
         team.setCreatedAt(LocalDateTime.now());
         Team savedTeam = teamService.createTeam(team);
@@ -93,11 +93,11 @@ public class TeamController {
 
         Team team = teamOpt.get();
 
-        if (!team.getName().equals(teamDTO.getName()) && teamService.existsByNameAndUser(teamDTO.getName(), user)) {
+        if (!team.getName().equals(teamDTO.name()) && teamService.existsByNameAndUser(teamDTO.name(), user)) {
             return ResponseEntity.badRequest().body("YOu already have a team with this name!");
         }
 
-        team.setName(teamDTO.getName());
+        team.setName(teamDTO.name());
         Team updatedTeam = teamService.updateTeam(team);
         return ResponseEntity.ok(userMapper.toTeamDTO(updatedTeam));
     }

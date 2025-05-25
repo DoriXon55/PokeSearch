@@ -41,12 +41,12 @@ public class UserController {
         User currentUser = userService.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         
-        if (!currentUser.getEmail().equals(userDTO.getEmail()) && 
-                userService.existsByEmail(userDTO.getEmail())) {
+        if (!currentUser.getEmail().equals(userDTO.email()) && 
+                userService.existsByEmail(userDTO.email())) {
             return ResponseEntity.badRequest().body("Email is already in use");
         }
         
-        currentUser.setEmail(userDTO.getEmail());
+        currentUser.setEmail(userDTO.email());
         // TODO maybe more to change.
         
         User updatedUser = userService.updateProfile(currentUser);
@@ -61,7 +61,7 @@ public class UserController {
     public ResponseEntity<?> changePassword(@RequestBody PasswordChangeDTO passwordDTO, Principal principal) {
         User currentUser = userService.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));        
-        User updatedUser = userService.changePassword(currentUser, passwordDTO.getNewPassword());
+        User updatedUser = userService.changePassword(currentUser, passwordDTO.newPassword());
         return ResponseEntity.ok("Password changed successfully");
     }
 }
