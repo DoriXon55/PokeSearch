@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 
 
 @Service
+@Transactional
 public class TeamService {
     private final TeamRepository teamRepository;
     private final TeamPokemonRepository teamPokemonRepository;
@@ -41,19 +42,16 @@ public class TeamService {
     }
 
 
-    @Transactional
     public Team createTeam(Team team)
     {
         return teamRepository.save(team);
     }
 
-    @Transactional
     public Team updateTeam(Team team)
     {
         return teamRepository.save(team);
     }
 
-    @Transactional
     public void deleteTeam(Team team)
     {
         teamRepository.delete(team);

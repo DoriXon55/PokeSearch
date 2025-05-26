@@ -6,15 +6,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.project.pokesearch.mapper.TeamMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.pokesearch.dto.TeamDTO;
-import com.project.pokesearch.mapper.UserMapper;
+import com.project.pokesearch.mapper.UserMapper1;
 import com.project.pokesearch.model.Team;
 import com.project.pokesearch.model.User;
 import com.project.pokesearch.repository.UserRepository;
@@ -23,7 +23,6 @@ import com.project.pokesearch.service.TeamService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -32,13 +31,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RequestMapping("/api/teams")
 public class TeamController {
     private final TeamService teamService;
-    private final UserMapper userMapper;
+    private final TeamMapper teamMapper;
     private final UserRepository userRepository;
 
     @Autowired
-    public TeamController(TeamService teamService, UserMapper userMapper, UserRepository userRepository) {
+    public TeamController(TeamService teamService, TeamMapper teamMapper, UserRepository userRepository) {
         this.teamService = teamService;
-        this.userMapper = userMapper;
+        this.teamMapper = teamMapper;
         this.userRepository = userRepository;
     }
 
@@ -47,7 +46,7 @@ public class TeamController {
         User user = getUserFromPrincipal(principal);
         List<Team> teams = teamService.getUserTeams(user);
         List<TeamDTO> teamDTOs = teams.stream()
-                .map(userMapper::toTeamDTO)
+                .map(teamMapper::toDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(teamDTOs);
     }
@@ -60,7 +59,7 @@ public class TeamController {
         
         if (teamOpt.isPresent()) {
             Team team = teamOpt.get();
-            return ResponseEntity.ok(userMapper.toTeamDTO(team));
+            return ResponseEntity.ok(teamMapper.toDTO(team));
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Team not found or you don't have access to it");
@@ -79,7 +78,7 @@ public class TeamController {
         team.setCreatedAt(LocalDateTime.now());
         Team savedTeam = teamService.createTeam(team);
 
-        return ResponseEntity.ok(userMapper.toTeamDTO(savedTeam));
+        return ResponseEntity.ok(teamMapper.toDTO(savedTeam));
     }
 
     @PutMapping("/{id}")
@@ -99,7 +98,7 @@ public class TeamController {
 
         team.setName(teamDTO.name());
         Team updatedTeam = teamService.updateTeam(team);
-        return ResponseEntity.ok(userMapper.toTeamDTO(updatedTeam));
+        return ResponseEntity.ok(teamMapper.toDTO(updatedTeam));
     }
 
     @DeleteMapping("/{id}")

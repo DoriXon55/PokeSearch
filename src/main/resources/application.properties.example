@@ -16,6 +16,7 @@ app.jwt.secret=your_jwt_secret_key
 app.jwt.expirationMs=8640000
 
 #SPRING MAIL
+spring.mail.from=noreply@pokesearch.com
 spring.mail.host=sandbox.smtp.mailtrap.io
 spring.mail.port=587
 spring.mail.username=your_mailtrap_username

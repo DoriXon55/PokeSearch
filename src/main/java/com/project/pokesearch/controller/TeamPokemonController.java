@@ -2,17 +2,17 @@ package com.project.pokesearch.controller;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.project.pokesearch.exception.TeamNotFoundOrAccessException;
+import com.project.pokesearch.mapper.TeamPokemonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.project.pokesearch.dto.TeamPokemonDTO;
-import com.project.pokesearch.mapper.UserMapper;
+import com.project.pokesearch.mapper.UserMapper1;
 import com.project.pokesearch.model.Team;
 import com.project.pokesearch.model.TeamPokemon;
 import com.project.pokesearch.model.User;
@@ -26,18 +26,18 @@ public class TeamPokemonController {
 
     private final TeamService teamService;
     private final TeamPokemonService teamPokemonService;
-    private final UserMapper userMapper;
+    private final TeamPokemonMapper teamPokemonMapper;
     private final UserRepository userRepository;
 
     @Autowired
     public TeamPokemonController(
             TeamService teamService,
             TeamPokemonService teamPokemonService,
-            UserMapper userMapper,
+            TeamPokemonMapper teamPokemonMapper,
             UserRepository userRepository) {
         this.teamService = teamService;
         this.teamPokemonService = teamPokemonService;
-        this.userMapper = userMapper;
+        this.teamPokemonMapper = teamPokemonMapper;
         this.userRepository = userRepository;
     }
 
@@ -49,7 +49,7 @@ public class TeamPokemonController {
         List<TeamPokemon> pokemons = teamPokemonService.getTeamPokemons(team);
 
         return ResponseEntity.ok(pokemons.stream()
-                .map(userMapper::toTeamPokemonDTO)
+                .map(teamPokemonMapper::toDTO)
                 .collect(Collectors.toList()));
     }
 
@@ -70,7 +70,7 @@ public class TeamPokemonController {
         teamPokemon.setPosition(pokemonDTO.position());
 
         TeamPokemon savedPokemon = teamPokemonService.addPokemonToTeam(teamPokemon);
-        return ResponseEntity.ok(userMapper.toTeamPokemonDTO(savedPokemon));
+        return ResponseEntity.ok(teamPokemonMapper.toDTO(savedPokemon));
     }
 
     @DeleteMapping("/{position}")

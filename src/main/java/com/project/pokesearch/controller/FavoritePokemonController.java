@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.project.pokesearch.mapper.FavoritePokemonMapper;
+import com.project.pokesearch.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.pokesearch.dto.FavoritePokemonDTO;
-import com.project.pokesearch.mapper.UserMapper;
+import com.project.pokesearch.mapper.UserMapper1;
 import com.project.pokesearch.model.FavoritePokemon;
 import com.project.pokesearch.model.User;
 import com.project.pokesearch.repository.UserRepository;
@@ -29,16 +31,18 @@ public class FavoritePokemonController {
     
     private final FavoritePokemonService favoritePokemonService;
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
+    
+    
+    private final FavoritePokemonMapper favoritePokemonMapper;
     
     @Autowired
     public FavoritePokemonController(
             FavoritePokemonService favoritePokemonService,
             UserRepository userRepository,
-            UserMapper userMapper) {
+            FavoritePokemonMapper favoritePokemonMapper) {
         this.favoritePokemonService = favoritePokemonService;
         this.userRepository = userRepository;
-        this.userMapper = userMapper;
+        this.favoritePokemonMapper = favoritePokemonMapper;
     }
     
     @GetMapping
@@ -46,7 +50,7 @@ public class FavoritePokemonController {
         User user = getUserFromPrincipal(principal);
         List<FavoritePokemon> favorites = favoritePokemonService.getUserFavorites(user);
         List<FavoritePokemonDTO> favoriteDTOs = favorites.stream()
-                .map(userMapper::toFavoritePokemonDTO)
+                .map(favoritePokemonMapper::toDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(favoriteDTOs);
     }
@@ -72,7 +76,7 @@ public class FavoritePokemonController {
         favoritePokemon.setAddedAt(LocalDateTime.now());
         
         FavoritePokemon saved = favoritePokemonService.addFavoritePokemon(favoritePokemon);
-        return ResponseEntity.ok(userMapper.toFavoritePokemonDTO(saved));
+        return ResponseEntity.ok(favoritePokemonMapper.toDTO(saved));
     }
     
     @DeleteMapping("/{pokemonId}")
