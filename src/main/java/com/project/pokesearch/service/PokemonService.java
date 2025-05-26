@@ -72,13 +72,38 @@ public class PokemonService {
                 .execute()
                 .map(response -> response.field("pokemon_v2_pokemon").toEntityList(PokemonGraphQlResponseRecord.class));
     }
-    
-    @Cacheable(value = "pokemonSearchGraphQl", key = "'search-gql' + #nameOrId.toLowerCase()")
+
+    @Cacheable(value = "pokemonSearchGraphQl", key = "'search-gql-' + #nameOrId.toLowerCase()")
     public Mono<List<PokemonGraphQlResponseRecord>> searchPokemonGraphQl(String nameOrId){
-        return graphQlClient.documentName("searchPokemonByNameOrId")
-                .variable("nameOrId", nameOrId)
+        Map<String, Object> variables = new HashMap<>();
+        Map<String, Object> whereCondition = new HashMap<>();
+        Map<String, Object> filter = new HashMap<>();
+
+        try{
+            int id = Integer.parseInt(nameOrId);
+            // Szukanie po ID
+            filter.put("_eq", id);
+            whereCondition.put("id", filter);
+        } catch (NumberFormatException e)
+        {
+            // Szukanie po nazwie
+            filter.put("_eq", nameOrId);
+            whereCondition.put("name", filter);
+        }
+        variables.put("whereCondition", whereCondition);
+
+        return graphQlClient.documentName("searchPokemonByNameOrId") // Upewnij się, że nazwa dokumentu jest poprawna
+                .variables(variables)
                 .execute()
                 .map(response -> response.field("pokemon_v2_pokemon").toEntityList(PokemonGraphQlResponseRecord.class));
+    }
+
+    @Cacheable(value = "getPokemonDetailsGraphQl", key = "'details-gql-' + #id")
+    public Mono<PokemonGraphQlResponseRecord> getPokemonDetailsGraphQl(int id) {
+        return graphQlClient.documentName("getPokemonDetails")
+                .variable("id", id)
+                .execute()
+                .map(response -> response.field("pokemon_v2_pokemon_by_pk").toEntity(PokemonGraphQlResponseRecord.class));
     }
     
 

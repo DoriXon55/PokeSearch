@@ -1,0 +1,16 @@
+query searchPokemonByNameOrId($whereCondition: pokemon_v2_pokemon_bool_exp!) {
+    pokemon_v2_pokemon(
+        where: $whereCondition
+    ) {
+        id
+        name
+        pokemon_v2_pokemontypes {
+            pokemon_v2_type {
+                name
+            }
+        }
+        pokemon_v2_pokemonsprites {
+            sprites
+        }
+    }
+}

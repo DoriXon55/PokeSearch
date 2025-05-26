@@ -26,16 +26,16 @@ public class PokemonController {
         this.pokemonService = pokemonService;
     }
 
-    @GetMapping
-    public ResponseEntity<?> getPokemonList (@RequestParam(defaultValue = "20") int limit, @RequestParam(defaultValue="0") int offset)
-    {
-        return ResponseEntity.ok(pokemonService.getPokemonList(limit, offset));
-    }
+//    @GetMapping
+//    public ResponseEntity<?> getPokemonList (@RequestParam(defaultValue = "20") int limit, @RequestParam(defaultValue="0") int offset)
+//    {
+//        return ResponseEntity.ok(pokemonService.getPokemonList(limit, offset));
+//    }
 
-    @GetMapping("/search/{nameOrId}")
-    public ResponseEntity<?> searchPokemon(@PathVariable String nameOrId) {
-        return ResponseEntity.ok(pokemonService.searchPokemon(nameOrId));
-    }
+//    @GetMapping("/search/{nameOrId}")
+//    public ResponseEntity<?> searchPokemon(@PathVariable String nameOrId) {
+//        return ResponseEntity.ok(pokemonService.searchPokemon(nameOrId));
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getPokemonDetails(@PathVariable int id) {
@@ -54,6 +54,11 @@ public class PokemonController {
     @GetMapping("/graphql/search/{nameOrId}")
     public Mono<List<PokemonGraphQlResponseRecord>> searchPokemonGraphQl(@PathVariable String nameOrId) {
         return pokemonService.searchPokemonGraphQl(nameOrId);
+    }
+
+    @GetMapping("/graphql/{id}")
+    public Mono<PokemonGraphQlResponseRecord> getPokemonDetailsGraphQl(@PathVariable int id) {
+        return pokemonService.getPokemonDetailsGraphQl(id);
     }
     
     

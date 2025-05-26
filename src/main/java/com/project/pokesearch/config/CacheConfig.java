@@ -19,6 +19,7 @@ public class CacheConfig {
         cacheManager.setCaffeine(Caffeine.newBuilder()
         .maximumSize(2000)
         .expireAfterWrite(1, TimeUnit.DAYS));
+        cacheManager.setAsyncCacheMode(true);
         return cacheManager;
     }
 }
