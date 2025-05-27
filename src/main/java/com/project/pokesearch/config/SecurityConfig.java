@@ -44,6 +44,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/password/reset-request").permitAll()
                                 .requestMatchers("/api/password/verify-code").permitAll()
                                 .requestMatchers("/api/password/reset").permitAll()
+                                .requestMatchers("graphql/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

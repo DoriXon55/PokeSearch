@@ -3,7 +3,6 @@ package com.project.pokesearch.controller;
 import java.security.Principal;
 
 import com.project.pokesearch.mapper.UserMapper;
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.pokesearch.dto.PasswordChangeDTO;
 import com.project.pokesearch.dto.UserDTO;
-import com.project.pokesearch.mapper.UserMapper1;
 import com.project.pokesearch.model.User;
 import com.project.pokesearch.service.UserService;
 

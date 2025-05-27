@@ -27,7 +27,7 @@ query getPokemonDetails($id: Int!) {
                 flavor_text
             }
             pokemon_v2_evolutionchain {
-                id # ID łańcucha ewolucji, do użycia w kolejnym zapytaniu o szczegóły ewolucji
+                id 
             }
         }
     }

@@ -23,3 +23,19 @@ spring.mail.username=your_mailtrap_username
 spring.mail.password=your_mailtrap_password
 spring.mail.properties.mail.smtp.auth=true
 spring.mail.properties.mail.smtp.starttls.enable=true
+
+
+
+#POKEAPI GRAPHQL
+app.graphql.client.base-url=https://beta.pokeapi.co/graphql/v1beta
+app.graphql.client.buffer-size-mb=16
+
+#CORS CONFIGURATION
+app.cors.allowed-origins=http://localhost:5173,http://another-frontend.com
+app.cors.allowed-methods=GET,POST,PUT,DELETE,OPTIONS
+app.cors.allowed-headers=*
+app.cors.allow-credentials=true
+
+#CAFFEINE CACHE
+app.cache.caffeine.maximum-size=2000
+app.cache.caffeine.expire-after-write-days=1

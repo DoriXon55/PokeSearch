@@ -81,18 +81,16 @@ public class PokemonService {
 
         try{
             int id = Integer.parseInt(nameOrId);
-            // Szukanie po ID
             filter.put("_eq", id);
             whereCondition.put("id", filter);
         } catch (NumberFormatException e)
         {
-            // Szukanie po nazwie
             filter.put("_eq", nameOrId);
             whereCondition.put("name", filter);
         }
         variables.put("whereCondition", whereCondition);
 
-        return graphQlClient.documentName("searchPokemonByNameOrId") // Upewnij się, że nazwa dokumentu jest poprawna
+        return graphQlClient.documentName("searchPokemonByNameOrId") 
                 .variables(variables)
                 .execute()
                 .map(response -> response.field("pokemon_v2_pokemon").toEntityList(PokemonGraphQlResponseRecord.class));

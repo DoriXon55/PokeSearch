@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.project.pokesearch.dto.TeamPokemonDTO;
-import com.project.pokesearch.mapper.UserMapper1;
 import com.project.pokesearch.model.Team;
 import com.project.pokesearch.model.TeamPokemon;
 import com.project.pokesearch.model.User;

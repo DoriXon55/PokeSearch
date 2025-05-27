@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.pokesearch.dto.TeamDTO;
-import com.project.pokesearch.mapper.UserMapper1;
 import com.project.pokesearch.model.Team;
 import com.project.pokesearch.model.User;
 import com.project.pokesearch.repository.UserRepository;
