@@ -16,7 +16,7 @@ public class TeamPokemonService {
     
     private final TeamPokemonRepository teamPokemonRepository;
     
-    @Autowired
+    
     public TeamPokemonService(TeamPokemonRepository teamPokemonRepository) {
         this.teamPokemonRepository = teamPokemonRepository;
     }

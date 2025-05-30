@@ -50,7 +50,6 @@ public class UserController {
     }
     
     
-    //todo DELETE THIS METHOD
     
     
     @PutMapping("/me/password")

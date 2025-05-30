@@ -6,8 +6,9 @@ import com.project.pokesearch.model.User;
 import com.project.pokesearch.repository.PasswordResetTokenRepository;
 import com.project.pokesearch.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.index.qual.LengthOf;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,14 +20,23 @@ import java.util.Random;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
 @Transactional
 @Slf4j
 public class PasswordResetService {
-    private UserRepository userRepository;
-    private PasswordResetTokenRepository tokenRepository;
-    private EmailService emailService;
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordResetTokenRepository tokenRepository;
+    private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
+    private final int tokenValidityMinutes;
+
+    public PasswordResetService(UserRepository userRepository, PasswordResetTokenRepository tokenRepository, EmailService emailService, PasswordEncoder passwordEncoder, @Value("${app.password-reset.token-validity-minutes}") int tokenValidityMinutes) {
+        this.userRepository = userRepository;
+        this.tokenRepository = tokenRepository;
+        this.emailService = emailService;
+        this.passwordEncoder = passwordEncoder;
+        this.tokenValidityMinutes = tokenValidityMinutes;
+    }
+
     public boolean requestPasswordReset(String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isEmpty()) {
@@ -40,7 +50,7 @@ public class PasswordResetService {
         token.setUser(user);
         token.setToken(UUID.randomUUID().toString());
         token.setVerificationCode(generateCode());
-        token.setExpiryDate(LocalDateTime.now().plusMinutes(30));
+        token.setExpiryDate(LocalDateTime.now().plusMinutes(tokenValidityMinutes));
         tokenRepository.save(token);
 
         String subject = "Reset Hasła dla PokeSearch";

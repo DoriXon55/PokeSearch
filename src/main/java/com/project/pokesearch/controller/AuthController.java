@@ -1,11 +1,13 @@
 package com.project.pokesearch.controller;
 
 import com.project.pokesearch.dto.AuthResponseDTO;
+import com.project.pokesearch.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,23 +23,25 @@ import com.project.pokesearch.repository.UserRepository;
 import com.project.pokesearch.service.JwtService;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+
+import static java.util.Collections.singletonList;
 
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
     private final AuthenticationManager authenticationManager;
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+ 
     private final JwtService jwtService;
+    private final UserService userService;
 
     @Autowired
-    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository,
-            PasswordEncoder passwordEncoder, JwtService jwtService) {
+    public AuthController(AuthenticationManager authenticationManager,  JwtService jwtService, UserService userService) {
         this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+  
         this.jwtService = jwtService;
+        this.userService = userService;
     }
 
     @PostMapping("/login")
@@ -55,20 +59,15 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequestDTO registerRequest) {
-        if (userRepository.existsByUsername(registerRequest.username())) {
-            return ResponseEntity.badRequest().body("Username is already taken!");
-        }
-        if (userRepository.existsByEmail(registerRequest.email())) {
-            return ResponseEntity.badRequest().body("Email is already in use!");
-        }
+        User registeredUser = userService.registerNewUser(registerRequest);
 
-        User user = new User();
-        user.setUsername(registerRequest.username());
-        user.setEmail(registerRequest.email());
-        user.setPassword(passwordEncoder.encode(registerRequest.password()));
-        user.setCreatedAt(LocalDateTime.now());
-        userRepository.save(user);
-        return ResponseEntity.ok("User registered successfully");
+        UserDetails userDetails = new org.springframework.security.core.userdetails.User(
+                registeredUser.getUsername(),
+                "",
+                Collections.singletonList(new SimpleGrantedAuthority("USER"))
+        );
+        String jwt = jwtService.generateToken(userDetails);
+        return ResponseEntity.ok(new AuthResponseDTO(jwt));
     }
     
     

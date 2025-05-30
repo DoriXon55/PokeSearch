@@ -24,7 +24,7 @@ public class JwtService {
     
     private final JwtProperties jwtProperties;
 
-    @Autowired
+    
     public JwtService(JwtProperties jwtProperties)
     {
         this.jwtProperties = jwtProperties;

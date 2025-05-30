@@ -16,7 +16,7 @@ public class FavoritePokemonService {
     
     private final FavoritePokemonRepository favoritePokemonRepository;
     
-    @Autowired
+    
     public FavoritePokemonService(FavoritePokemonRepository favoritePokemonRepository) {
         this.favoritePokemonRepository = favoritePokemonRepository;
     }

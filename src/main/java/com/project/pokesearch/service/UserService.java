@@ -4,9 +4,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import com.project.pokesearch.dto.RegisterRequestDTO;
 import com.project.pokesearch.dto.UserDTO;
 import com.project.pokesearch.exception.EmailAlreadyInUseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +47,6 @@ public class UserService {
     public User updateProfile(User user, UserDTO userDTO) {
         if (!user.getEmail().equals(userDTO.email()) && existsByEmail(userDTO.email())) {
             
-            // TODO exception
             throw new EmailAlreadyInUseException("Email already exists");
         }
         user.setEmail(userDTO.email());
@@ -55,6 +56,22 @@ public class UserService {
     public User changePassword(User user, String newPassword) {
         user.setPassword(passwordEncoder.encode(newPassword));
         user.setLastPasswordChangeDate(LocalDateTime.now());
+        return userRepository.save(user);
+    }
+
+    public User registerNewUser(RegisterRequestDTO registerRequest) {
+        if (userRepository.existsByUsername(registerRequest.username())) {
+            throw new RuntimeException("Username is already in use");
+        }
+        if (userRepository.existsByEmail(registerRequest.email())) {
+            throw new EmailAlreadyInUseException("Email already exists");
+        }
+
+        User user = new User();
+        user.setUsername(registerRequest.username());
+        user.setEmail(registerRequest.email());
+        user.setPassword(passwordEncoder.encode(registerRequest.password()));
+        user.setCreatedAt(LocalDateTime.now());
         return userRepository.save(user);
     }
 }

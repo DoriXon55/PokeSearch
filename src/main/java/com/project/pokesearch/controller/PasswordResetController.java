@@ -16,9 +16,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/password")
-@AllArgsConstructor
 public class PasswordResetController {
-    private PasswordResetService passwordResetService;
+    private final PasswordResetService passwordResetService;
+    
+    public PasswordResetController(PasswordResetService passwordResetService) { this.passwordResetService = passwordResetService; }
     
     @PostMapping("/reset-request")
     public ResponseEntity<?> requestReset(@RequestBody PasswordResetRequestDTO requestDTO)

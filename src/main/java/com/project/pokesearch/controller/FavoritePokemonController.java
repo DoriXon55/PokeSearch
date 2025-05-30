@@ -29,8 +29,6 @@ public class FavoritePokemonController {
     
     private final FavoritePokemonService favoritePokemonService;
     private final UserRepository userRepository;
-    
-    
     private final FavoritePokemonMapper favoritePokemonMapper;
     
     @Autowired

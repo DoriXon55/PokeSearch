@@ -18,7 +18,7 @@ import jakarta.transaction.Transactional;
 public class TeamService {
     private final TeamRepository teamRepository;
 
-    @Autowired
+    
     public TeamService(TeamRepository teamRepository)
     {
         this.teamRepository = teamRepository;
