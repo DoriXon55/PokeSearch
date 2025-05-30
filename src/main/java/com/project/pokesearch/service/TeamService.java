@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.project.pokesearch.model.Team;
 import com.project.pokesearch.model.User;
-import com.project.pokesearch.repository.TeamPokemonRepository;
 import com.project.pokesearch.repository.TeamRepository;
 
 import jakarta.transaction.Transactional;
@@ -18,13 +17,11 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class TeamService {
     private final TeamRepository teamRepository;
-    private final TeamPokemonRepository teamPokemonRepository;
 
     @Autowired
-    public TeamService(TeamRepository teamRepository, TeamPokemonRepository teamPokemonRepository)
+    public TeamService(TeamRepository teamRepository)
     {
         this.teamRepository = teamRepository;
-        this.teamPokemonRepository = teamPokemonRepository;
     }
 
     public List<Team> getUserTeams(User user)
